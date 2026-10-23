@@ -25,6 +25,7 @@ TH = {
     "conf":          0.90,   # средняя conf поля
     "char_conf":     0.80,   # min char_conf для коротких полей (имена, даты, номер, код)
     "char_conf_names": 0.90,   # min char_conf для имён (строже)
+    "char_conf_org":   0.90,
     "bad_frac":      0.01,   # доля символов с char_conf < 0.5 для длинных полей
     "sharpness":     None,   # мин. sharpness (None = не режем)
     "glare":         None,   # макс. glare (None = не режем)
@@ -164,8 +165,6 @@ LONG_FIELDS = {"Birth_place_ru", "Issue_organization_ru"}
 
 NAME_FIELDS = {"Last_name_ru", "First_name_ru", "Middle_name_ru"}
 
-NAME_FIELDS = {"Last_name_ru", "First_name_ru", "Middle_name_ru"}
-
 def check_confidence(f, source):
     extra = TH["mobile_extra"] if source in ("mobile", "mobile_v2") else 0.0
     for name, v in f.items():
@@ -173,7 +172,12 @@ def check_confidence(f, source):
             return f"missing_{name}"
         if v["conf"] < TH["conf"] + extra:
             return f"low_conf_{name}"
-        threshold = TH["char_conf_names"] if name in NAME_FIELDS else TH["char_conf"]
+        if name in NAME_FIELDS:
+            threshold = TH["char_conf_names"]
+        elif name == "Issue_organization_ru":
+            threshold = TH["char_conf_org"]
+        else:
+            threshold = TH["char_conf"]
         if v["min_char"] < threshold + extra:
             return f"low_char_{name}"
     return None
