@@ -98,24 +98,7 @@ def check_formats(f):
     if not RE_LIC.match(f["Licence_number"]["text"]):            return "licence_fmt"
     return None
 
-RE_BP_START = re.compile(
-    r"^(С\.|Д\.|П\.|Г\.|ГОР\.|Р\.П\.|ПОС\.|СЕЛО|ДЕРЕВНЯ|СТАНИЦА|"
-    r"ХУТОР|АУЛ|ПГТ|РАБ\.|ПОСЕЛОК|С\.П\.|ПГТ\.|СТ-ЦА|СТ\.)",
-    re.IGNORECASE,
-)
 
-ORG_KEYWORDS = [
-    "МВД", "УМВД", "УВД", "ОВД", "ОМВД", "РОВД", "ГОВД",
-    "ОМ", "ГОМ", "УФМС", "ОФМС", "ФМС",
-    "МИГРАЦИ", "РОССИИ", "ОТДЕЛ", "УПРАВЛ", "ПАСПОРТ",
-    "РЕЗЕРВ", "АДМИНИСТРАТИВН",
-]
-
-def check_org(f):
-    text = f["Issue_organization_ru"]["text"].upper()
-    if not any(k in text for k in ORG_KEYWORDS):
-        return "org_no_keyword"
-    return None
 
 RE_ORG_TRUNC_END = re.compile(r"\s(В|ПО)\s*$", re.IGNORECASE)
 RE_ORG_TRUNC_START = re.compile(r"^РОССИИ\s+ПО\s", re.IGNORECASE)
@@ -124,6 +107,14 @@ def check_org_truncation(f):
     text = f["Issue_organization_ru"]["text"].strip().upper()
     if RE_ORG_TRUNC_END.search(text) or RE_ORG_TRUNC_START.match(text):
         return "org_truncated"
+    return None
+
+RE_BP_TRUNC_START = re.compile(r"^(Р-НА|РАЙОНА|Р-Н|РАЙОН)\s", re.IGNORECASE)
+
+def check_bp_truncation(f):
+    text = f["Birth_place_ru"]["text"].strip().upper()
+    if RE_BP_TRUNC_START.match(text):
+        return "bp_truncated"
     return None
 
 def check_names(f):
@@ -138,14 +129,6 @@ def check_names(f):
         return "org_chars"
     return None
 
-ORG_KEYWORDS = ["МВД", "ОВД", "ОМВД", "УМВД", "УФМС", "ОФМС",
-                "МИГРАЦИ", "РОССИИ", "ОТДЕЛ", "УПРАВЛ", "ПАСПОРТ"]
-
-def check_org(f):
-    text = f["Issue_organization_ru"]["text"].upper()
-    if not any(k in text for k in ORG_KEYWORDS):
-        return "org_no_keyword"
-    return None
 
 def add_years(d: date, years: int) -> date:
     try:
@@ -176,14 +159,6 @@ def check_subdivision(f, codes):
         return "code_unknown"
     return None
 
-# Короткие поля: min_char (один плохой символ критичен)
-SHORT_FIELDS = {
-    "Last_name_ru", "First_name_ru", "Middle_name_ru",
-    "Sex_ru", "Birth_date", "Issue_date",
-    "Issue_organisation_code", "Licence_number",
-}
-# Длинные поля: bad_frac (один плохой символ среди 60 — не критичен)
-LONG_FIELDS = {"Birth_place_ru", "Issue_organization_ru"}
 
 NAME_FIELDS = {"Last_name_ru", "First_name_ru", "Middle_name_ru"}
 
@@ -279,7 +254,8 @@ def decide(pred, codes):
     checks = [
     ("formats",     lambda: check_formats(f)),
     ("names",       lambda: check_names(f)),
-    ("org_trunc",   lambda: check_org_truncation(f)),    
+    ("org_trunc",   lambda: check_org_truncation(f)),
+    ("bp_trunc",    lambda: check_bp_truncation(f)),    
     ("dates",       lambda: check_dates(f)),
     ("subdivision", lambda: check_subdivision(f, codes)),
     ("quality",     lambda: check_quality(pred)),
@@ -302,7 +278,10 @@ def decide(pred, codes):
 
 # ------------------------- CLI -------------------------
 def main(inp, outp):
-    codes = load_subdivisions(train_labels="data/train_labels.jsonl")
+    is_train = "train" in inp
+    codes = load_subdivisions(
+        train_labels="data/train_labels.jsonl" if is_train else None
+    )
     with open(inp, encoding="utf-8") as fin, \
          open(outp, "w", encoding="utf-8") as fout:
         for line in fin:
@@ -312,8 +291,3 @@ def main(inp, outp):
                    "decision": decision,
                    "fields": fields if decision == "accept" else {}}
             fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
-
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        sys.exit("usage: postprocess.py <predictions.jsonl> <answers.jsonl>")
-    main(sys.argv[1], sys.argv[2])
