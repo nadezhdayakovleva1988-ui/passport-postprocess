@@ -12,9 +12,15 @@
 - Решение: оставить char_conf_org=0.90, check_org убрать из decide()
 - Коммит: <a89b1a9>
 
+### 2026-10-23 — char_conf_org=0.92
+- 0.90: good=1469 bad=143
+- 0.92: good=1464 bad=133 (−5 good, −10 bad) ✓ ОСТАВИТЬ
+- Issue_organization_ru: 32 → 25
+- Коммит: <71fc258>
+
 ## Текущее состояние (baseline)
 - `postprocess.py`: char_conf=0.80, char_conf_names=0.90, char_conf_org=0.90
-- `evaluate.py` на train: **good=1469, bad=143**
+- `evaluate.py` на train: **good=1464, bad=133**
 - Ошибки по полям: BLast_name_ru=22, First_name_ru=11, Middle_name_ru=12, Birth_place_ru=61, Issue_date=3, Issue_organisation_code=3, Licence_number=7, Issue_organization_ru=32
 
 ## Что сделано

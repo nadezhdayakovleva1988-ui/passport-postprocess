@@ -117,6 +117,15 @@ def check_org(f):
         return "org_no_keyword"
     return None
 
+RE_ORG_TRUNC_END = re.compile(r"\s(В|ПО)\s*$", re.IGNORECASE)
+RE_ORG_TRUNC_START = re.compile(r"^РОССИИ\s+ПО\s", re.IGNORECASE)
+
+def check_org_truncation(f):
+    text = f["Issue_organization_ru"]["text"].strip().upper()
+    if RE_ORG_TRUNC_END.search(text) or RE_ORG_TRUNC_START.match(text):
+        return "org_truncated"
+    return None
+
 def check_names(f):
     for k in ("Last_name_ru", "First_name_ru", "Middle_name_ru"):
         if not RE_NAME.match(f[k]["text"]):
@@ -259,7 +268,8 @@ def decide(pred, codes):
 
     checks = [
     ("formats",     lambda: check_formats(f)),
-    ("names",       lambda: check_names(f)),    
+    ("names",       lambda: check_names(f)),
+    ("org_trunc",   lambda: check_org_truncation(f)),    
     ("dates",       lambda: check_dates(f)),
     ("subdivision", lambda: check_subdivision(f, codes)),
     ("quality",     lambda: check_quality(pred)),
