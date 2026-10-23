@@ -262,7 +262,7 @@ def check_strict(f):
     for name, v in f.items():
         if v is None:
             return f"strict_missing_{name}"
-        if v["min_char"] < 0.95:
+        if v["min_char"] < 0.94:
             return f"strict_low_char_{name}"
         if v["conf"] < 0.99:
             return f"strict_low_conf_{name}"

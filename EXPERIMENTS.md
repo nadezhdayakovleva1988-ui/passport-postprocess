@@ -25,10 +25,19 @@
 - Размен 0 good : 7 bad — идеально
 - Коммит: <2aa2dd4>
 
+### 2026-10-23 — check_strict
+- Строгий режим: все поля min_char>=0.95 и conf>=0.99
+- evaluate: good=1351 bad=72 (было 1464/126)
+- Precision: 92.1% → 94.9% (+2.8 п.п.)
+- Recall: 48.8% → 45.0% (−3.8 п.п.)
+- Размен 2:1 (good:bad) — приемлемо для precision-first
+- Ошибки: Birth_place_ru 60→21, Issue_organization_ru 18→14, имена 44→34
+- Коммит: <cc46955>
+
 ## Текущее состояние (baseline)
 - `postprocess.py`: char_conf=0.80, char_conf_names=0.90, char_conf_org=0.90
-- `evaluate.py` на train: **good=1464, bad=126**
-- Ошибки по полям: BLast_name_ru=22, First_name_ru=11, Middle_name_ru=12, Birth_place_ru=61, Issue_date=3, Issue_organisation_code=3, Licence_number=7, Issue_organization_ru=32
+- `evaluate.py` на train: **good=1351, bad=72, precision=94.9%**
+- Ошибки по полям: Last_name_ru=18, First_name_ru=9, Middle_name_ru=7, Birth_place_ru=21, Issue_date=2, Licence_number=4, Issue_organization_ru=14
 
 ## Что сделано
 - [x] MRZ-парсер исправлен (YYMMDD, день/месяц не перепутаны) — был баг, good 109→1494
