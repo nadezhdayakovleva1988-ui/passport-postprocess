@@ -258,6 +258,16 @@ def check_mrz(pred, f):
     return None
 
 # ------------------------- главная логика -------------------------
+def check_strict(f):
+    for name, v in f.items():
+        if v is None:
+            return f"strict_missing_{name}"
+        if v["min_char"] < 0.95:
+            return f"strict_low_char_{name}"
+        if v["conf"] < 0.99:
+            return f"strict_low_conf_{name}"
+    return None
+
 def decide(pred, codes):
     if not (pred.get("viz") or {}):
         return "reject", "empty_viz", {}
@@ -283,6 +293,10 @@ def decide(pred, codes):
     err = check_confidence(f, pred.get("source", "web"))
     if err:
         return "reject", err, {}
+
+    err = check_strict(f)          # ← ДОБАВИТЬ
+    if err:                        # ← ДОБАВИТЬ
+        return "reject", err, {}   # ← ДОБАВИТЬ
 
     return "accept", "ok", {k: v["text"] for k, v in f.items()}
 

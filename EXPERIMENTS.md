@@ -18,9 +18,16 @@
 - Issue_organization_ru: 32 → 25
 - Коммит: <71fc258>
 
+### 2026-10-23 — check_org_truncation
+- Ловит обрыв Issue_organization_ru (конец на В/ПО, начало на РОССИИ ПО)
+- evaluate: good=1464 bad=126 (было 1464/133)
+- Issue_organization_ru: 25 → 18
+- Размен 0 good : 7 bad — идеально
+- Коммит: <2aa2dd4>
+
 ## Текущее состояние (baseline)
 - `postprocess.py`: char_conf=0.80, char_conf_names=0.90, char_conf_org=0.90
-- `evaluate.py` на train: **good=1464, bad=133**
+- `evaluate.py` на train: **good=1464, bad=126**
 - Ошибки по полям: BLast_name_ru=22, First_name_ru=11, Middle_name_ru=12, Birth_place_ru=61, Issue_date=3, Issue_organisation_code=3, Licence_number=7, Issue_organization_ru=32
 
 ## Что сделано
