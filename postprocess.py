@@ -104,6 +104,19 @@ RE_BP_START = re.compile(
     re.IGNORECASE,
 )
 
+ORG_KEYWORDS = [
+    "МВД", "УМВД", "УВД", "ОВД", "ОМВД", "РОВД", "ГОВД",
+    "ОМ", "ГОМ", "УФМС", "ОФМС", "ФМС",
+    "МИГРАЦИ", "РОССИИ", "ОТДЕЛ", "УПРАВЛ", "ПАСПОРТ",
+    "РЕЗЕРВ", "АДМИНИСТРАТИВН",
+]
+
+def check_org(f):
+    text = f["Issue_organization_ru"]["text"].upper()
+    if not any(k in text for k in ORG_KEYWORDS):
+        return "org_no_keyword"
+    return None
+
 def check_names(f):
     for k in ("Last_name_ru", "First_name_ru", "Middle_name_ru"):
         if not RE_NAME.match(f[k]["text"]):
@@ -246,7 +259,7 @@ def decide(pred, codes):
 
     checks = [
     ("formats",     lambda: check_formats(f)),
-    ("names",       lambda: check_names(f)),
+    ("names",       lambda: check_names(f)),    
     ("dates",       lambda: check_dates(f)),
     ("subdivision", lambda: check_subdivision(f, codes)),
     ("quality",     lambda: check_quality(pred)),

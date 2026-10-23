@@ -1,13 +1,14 @@
 # Журнал экспериментов
 
-Формат: `[дата] [что] → good/bad`
+### 2026-10-23 — char_conf_org
+- tune_org.py: 0.80→174, 0.82→167, 0.85→153, 0.88→146, 0.90→143, 0.92→133
+- Выбрал 0.90: good=1469 bad=143 (−31 bad, −14 good)
+- Коммит: <0bf53c6>
 
 ## Текущее состояние (baseline)
-- `postprocess.py`: char_conf=0.80, char_conf_names=0.90
-- `evaluate.py` на train: **good=1483, bad=174**
-- Ошибки по полям: Birth_place_ru=64, Issue_organization_ru=62,
-  Last_name_ru=23, Middle_name_ru=12, First_name_ru=11,
-  Licence_number=7, Issue_date=4, Issue_organisation_code=3
+- `postprocess.py`: char_conf=0.80, char_conf_names=0.90, char_conf_org=0.90
+- `evaluate.py` на train: **good=1469, bad=143**
+- Ошибки по полям: BLast_name_ru=22, First_name_ru=11, Middle_name_ru=12, Birth_place_ru=61, Issue_date=3, Issue_organisation_code=3, Licence_number=7, Issue_organization_ru=32
 
 ## Что сделано
 - [x] MRZ-парсер исправлен (YYMMDD, день/месяц не перепутаны) — был баг, good 109→1494
