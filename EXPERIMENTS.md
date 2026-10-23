@@ -5,6 +5,13 @@
 - Выбрал 0.90: good=1469 bad=143 (−31 bad, −14 good)
 - Коммит: <0bf53c6>
 
+### 2026-10-23 — char_conf_org vs check_org
+- Только char_conf_org=0.90: good=1469 bad=143 (−14 good, −31 bad) ✓ ОСТАВИТЬ
+- Только check_org (расширенный ORG_KEYWORDS): good=1435 bad=168 (−48 good, −6 bad) ✗ УБРАТЬ
+- Оба: good=1421 bad=139 (−62 good, −35 bad) — хуже, чем только char_conf_org
+- Решение: оставить char_conf_org=0.90, check_org убрать из decide()
+- Коммит: <a89b1a9>
+
 ## Текущее состояние (baseline)
 - `postprocess.py`: char_conf=0.80, char_conf_names=0.90, char_conf_org=0.90
 - `evaluate.py` на train: **good=1469, bad=143**

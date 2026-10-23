@@ -25,7 +25,7 @@ TH = {
     "conf":          0.90,   # средняя conf поля
     "char_conf":     0.80,   # min char_conf для коротких полей (имена, даты, номер, код)
     "char_conf_names": 0.90,   # min char_conf для имён (строже)
-    "char_conf_org":   0.90,
+    "char_conf_org":   0.92,
     "bad_frac":      0.01,   # доля символов с char_conf < 0.5 для длинных полей
     "sharpness":     None,   # мин. sharpness (None = не режем)
     "glare":         None,   # макс. glare (None = не режем)
