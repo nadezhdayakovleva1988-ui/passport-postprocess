@@ -34,9 +34,22 @@
 - Ошибки: Birth_place_ru 60→21, Issue_organization_ru 18→14, имена 44→34
 - Коммит: <cc46955>
 
+### 2026-10-23 — check_strict tuned
+- tune_strict2.py: 0.90→1419/92, 0.92→1413/86, 0.93→1399/80, 0.94→1384/74, 0.95→1351/72
+- Выбрал 0.94: precision 94.9% (как у 0.95), good +33
+- evaluate: good=1384 bad=74
+- Коммит: <b99538b>
+
+### 2026-10-23 — cleanup
+- main(): is_train → на test не читает train_labels
+- удалены дубликаты ORG_KEYWORDS/check_org, RE_BP_START, SHORT_FIELDS/LONG_FIELDS
+- evaluate: good=1384 bad=70 (было 1384/74)
+- Precision: 95.2%
+- Коммит: <d506a42>
+
 ## Текущее состояние (baseline)
 - `postprocess.py`: char_conf=0.80, char_conf_names=0.90, char_conf_org=0.90
-- `evaluate.py` на train: **good=1351, bad=72, precision=94.9%**
+- `evaluate.py` на train: **good=1384, bad=70, precision=95.2%**
 - Ошибки по полям: Last_name_ru=18, First_name_ru=9, Middle_name_ru=7, Birth_place_ru=21, Issue_date=2, Licence_number=4, Issue_organization_ru=14
 
 ## Что сделано
