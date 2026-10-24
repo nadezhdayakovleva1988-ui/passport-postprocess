@@ -291,3 +291,8 @@ def main(inp, outp):
                    "decision": decision,
                    "fields": fields if decision == "accept" else {}}
             fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        sys.exit("usage: postprocess.py <predictions.jsonl> <answers.jsonl>")
+    main(sys.argv[1], sys.argv[2])            
